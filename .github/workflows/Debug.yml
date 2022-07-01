@@ -23,7 +23,7 @@ jobs:
           commit=$(curl -sL $upstreamCode/commits/main |grep -o '/CatVodTVOfficial/TVBoxOSC/commit/[a-z0-9]\+' |head -1 | cut -d\/ -f5)
           if ! git log --oneline |grep -q "$commit"; then
             echo "commit=$commit" >> $GITHUB_ENV
-            echo "commitS=${commit:0:7}" >> $GITHUB_ENV
+            echo "tag=$(date -d '8 hour' -u +%Y%m%d-%H%M)" >> $GITHUB_ENV
           fi
       - name: Checkout Source Code and Zip
         if: ${{ env.commit }}
@@ -31,9 +31,8 @@ jobs:
           git clone ${{ env.upstreamCode }} TVBoxOSC
           cd TVBoxOSC
           git checkout ${{ env.commit }}
-          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
-          zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
-      - name: Release Apk Sign
+          zip -q -x ".git/*" -r source.zip .
+      - name: Debug Apk Sign
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
         run: |
@@ -59,8 +58,8 @@ jobs:
         run: |
           rm -rf apk/
           mkdir -p apk/
-          for file in `find ~ -name "*Debug*.apk" -print`; do
-            mv "$file" apk/TVBox_release_${{ env.tag }}.apk
+          for file in `find ~ -name "*.apk" -print`; do
+            mv "$file" apk/
           done
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
@@ -77,15 +76,14 @@ jobs:
           body: ${{ env.commit }}
           files: |
             TVBoxOSC/apk/*
-            TVBoxOSC/${{ env.commitS }}-source.zip
+            TVBoxOSC/source.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     
       - name: Push to master
         if: ${{ env.commit }}
         run: |
           rm -rf TVBoxOSC
-          sed -i "/Updated Commit/c\\+ Updated Commit: ${{ env.commit }}" README.md
+          sed -i "/Updated Commit/c\\+ Updated Commit：${{ env.commit }}" README.md
           sed -i '/url =/d' ./.git/config
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
