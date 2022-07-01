@@ -8,9 +8,6 @@ name: Release
       - master
   workflow_dispatch:
 
-name: Test
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
