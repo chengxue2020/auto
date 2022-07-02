@@ -1,11 +1,11 @@
 name: test
 
 on:
-  schedule:
-    - cron: 15,45 0-18 * * *
-  push:
-    branches:
-      - master
+  #schedule:
+  #  - cron: 15,45 0-18 * * *
+  #push:
+  #  branches:
+  #    - master
   workflow_dispatch:
 
 jobs:
