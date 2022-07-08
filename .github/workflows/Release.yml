@@ -86,7 +86,7 @@ jobs:
             TVBoxOSC/apk/*
             TVBoxOSC/source.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
       - name: Push to master
         if: ${{ env.commit }}
         run: |
