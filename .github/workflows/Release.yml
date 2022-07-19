@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   schedule:
-    - cron: 15 0-18 * * *
+    - cron: 1 0-18 * * *
   push:
     branches:
       - master
