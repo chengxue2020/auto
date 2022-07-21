@@ -67,14 +67,17 @@ jobs:
         run: |
           rm -rf apk/
           mkdir -p apk/
-          for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" apk/TVBox_${{ env.tag }}
+          for file in `find ~ -name "*release*.apk" -print`; do
+            mv "$file" apk/TVBox_Release_${{ env.tag }}.apk
+          done
+          for file in `find ~ -name "*debug*.apk" -print`; do
+            mv "$file" apk/TVBox_Debug_${{ env.tag }}.apk
           done
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         if: ${{ env.commit }}
         with:
-          name: com.github.tvbox.osc
+          name: TVBox_Release_and_Debug
           path: TVBoxOSC/apk/*
       - name: Release and Upload Assets
         uses: softprops/action-gh-release@v1
