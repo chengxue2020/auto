@@ -31,7 +31,6 @@ jobs:
           git clone ${{ env.upstreamCode }} TVBoxOSC
           cd TVBoxOSC
           git checkout ${{ env.commit }}
-																													
           zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
       - name: Release Apk Sign
         if: ${{ env.commit }}
