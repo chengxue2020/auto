@@ -1,4 +1,4 @@
-name: NEW Test
+name: Test
 
 on:
   schedule:
@@ -31,7 +31,7 @@ jobs:
           git clone ${{ env.upstreamCode }} TVBoxOSC
           cd TVBoxOSC
           git checkout ${{ env.commit }}
-          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
+																													
           zip -q -x ".git/*" -r ${{ env.commitS }}-source.zip .
       - name: Release Apk Sign
         if: ${{ env.commit }}
@@ -47,28 +47,28 @@ jobs:
           sed -i '$a\RELEASE_KEY_ALIAS=TVBoxOSC'            ./gradle.properties
           sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
           sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
-      - name: Build Release Version With Gradle
+      - name: Build Release With Gradle
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
-      - name: Build Debug Version With Gradle
+          
+      - name: Build Debug With Gradle
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
         run: |
           chmod +x gradlew
           ./gradlew assembledebug --build-cache --parallel --daemon --warning-mode all
-      - name: Prepare Release App
+          
+      - name: Prepare App
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
         run: |
           rm -rf apk/
           mkdir -p apk/
-          for file in `find ~ -name "*release*.apk" -print`; do
-            mv "$file" apk/TVBox_Release_${{ env.tag }}.apk
-          for file in `find ~ -name "*debug*.apk" -print`; do
-            mv "$file" apk/TVBox_Debug_${{ env.tag }}.apk
+          for file in `find ~ -name "*.apk" -print`; do
+            mv "$file" apk/TVBox_release_${{ env.tag }}.apk
           done
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
