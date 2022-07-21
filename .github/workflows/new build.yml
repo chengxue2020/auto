@@ -53,12 +53,6 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
-      - name: Build Debug Version With Gradle
-        if: ${{ env.commit }}
-        working-directory: TVBoxOSC
-        run: |
-          chmod +x gradlew
-          ./gradlew assembledebug --build-cache --parallel --daemon --warning-mode all
       - name: Prepare Release App
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
@@ -68,6 +62,12 @@ jobs:
           for file in `find ~ -name "*release*.apk" -print`; do
             mv "$file" apk/TVBox_Release_${{ env.tag }}.apk
           done
+      - name: Build Debug Version With Gradle
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          chmod +x gradlew
+          ./gradlew assembledebug --build-cache --parallel --daemon --warning-mode all
       - name: Prepare Debug App
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
@@ -98,7 +98,7 @@ jobs:
       - name: Push to master
         if: ${{ env.commit }}
         run: |
-          rm -rf TVBoxOSC
+          rm -rf auto
           sed -i "/Updated Commit/c\\+ Updated Commit: ${{ env.commit }}" README.md
           sed -i '/url =/d' ./.git/config
           git config --local user.name "github-actions[bot]"
