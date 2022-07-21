@@ -66,7 +66,7 @@ jobs:
           rm -rf apk/
           mkdir -p apk/
           for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" apk/TVBox_${{ env.tag }}.apk
+            mv "$file" apk/TVBox_${{ env.tag }}
           done
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
