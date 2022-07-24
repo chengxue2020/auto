@@ -1,9 +1,9 @@
 name: Build APK
 
 on:
-  #schedule:
+  schedule:
     - cron: 1 0-18 * * *
-  #push:
+  push:
     branches:
       - master
   workflow_dispatch:
